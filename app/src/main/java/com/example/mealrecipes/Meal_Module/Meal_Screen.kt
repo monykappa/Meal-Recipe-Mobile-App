@@ -176,20 +176,31 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFEFAE0))
+                    .background(Color(0xFFFEFAF6))
             ) {
                 HorizontalPager(state = pagerState) { page ->
                     itemContent(meals[page])
                 }
             }
-            DotsIndicator(
+            CustomDotsIndicator(
                 totalDots = meals.size,
-                selectedIndex = pagerState.currentPage,
-                selectedColor = MaterialTheme.colorScheme.primary,
-                unSelectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+                selectedIndex = pagerState.currentPage
             )
         }
     }
+}
+
+@Composable
+fun CustomDotsIndicator(totalDots: Int, selectedIndex: Int) {
+    val selectedColor = Color(0xFF000000) // Dark color for selected dots
+    val unSelectedColor = Color(0xFFB0B0B0) // Light gray for unselected dots
+
+    DotsIndicator(
+        totalDots = totalDots,
+        selectedIndex = selectedIndex,
+        selectedColor = selectedColor,
+        unSelectedColor = unSelectedColor
+    )
 }
 
 
@@ -197,8 +208,8 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
 fun DotsIndicator(
     totalDots: Int,
     selectedIndex: Int,
-    selectedColor: Color,   // Added parameter for selected dot color
-    unSelectedColor: Color  // Added parameter for unselected dot color
+    selectedColor: Color,
+    unSelectedColor: Color
 ) {
     LazyRow(
         modifier = Modifier
@@ -220,6 +231,7 @@ fun DotsIndicator(
         }
     }
 }
+
 
 
 
