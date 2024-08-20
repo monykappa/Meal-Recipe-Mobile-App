@@ -31,11 +31,13 @@ import coil.compose.AsyncImage
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 @Composable
 fun MealScreen(navController: NavHostController, viewModel: MealViewModel = viewModel()) {
     val categories by viewModel.categories.collectAsState(emptyList())
-    val meals by viewModel.meals.collectAsState()
+    val meals by viewModel.meals.collectAsState(emptyList())
     val error by viewModel.error.collectAsState()
+    val isLoadingMeals by viewModel.isLoadingMeals.collectAsState(false)
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
     val selectedCategory = remember { mutableStateOf<String?>(null) }
@@ -93,7 +95,6 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = category.strCategory)
                         }
-
                     }
                 }
             }
@@ -109,6 +110,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
             items(meals) { meal ->
                 MealItem(
                     meal = meal,
+                    isLoading = isLoadingMeals,
                     viewModel = viewModel,
                     onClick = { selectedMeal ->
                         navController.navigate("MealDetail/${selectedMeal.strMeal}")
@@ -130,6 +132,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
 }
 
 
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
@@ -139,15 +142,19 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        HorizontalPager(state = pagerState) { page ->
-            itemContent(meals[page])
+        if (meals.isEmpty()) {
+            CircularProgressIndicator()
+        } else {
+            HorizontalPager(state = pagerState) { page ->
+                itemContent(meals[page])
+            }
+            DotsIndicator(
+                totalDots = meals.size,
+                selectedIndex = pagerState.currentPage,
+                selectedColor = MaterialTheme.colorScheme.primary,
+                unSelectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
+            )
         }
-        DotsIndicator(
-            totalDots = meals.size,
-            selectedIndex = pagerState.currentPage,
-            selectedColor = MaterialTheme.colorScheme.primary,
-            unSelectedColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-        )
     }
 }
 
@@ -213,11 +220,10 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
     }
 }
 
-
-
 @Composable
 fun MealItem(
     meal: Meal,
+    isLoading: Boolean,
     viewModel: MealViewModel,
     onClick: (Meal) -> Unit,
     onFavoriteChanged: (Boolean) -> Unit
@@ -236,13 +242,21 @@ fun MealItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            AsyncImage(
-                model = meal.strMealThumb,
-                contentDescription = meal.strMeal,
-                modifier = Modifier
-                    .size(100.dp)
-                    .padding(end = 16.dp)
-            )
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(end = 16.dp)
+                )
+            } else {
+                AsyncImage(
+                    model = meal.strMealThumb,
+                    contentDescription = meal.strMeal,
+                    modifier = Modifier
+                        .size(100.dp)
+                        .padding(end = 16.dp)
+                )
+            }
             Column(
                 modifier = Modifier.weight(1f)
             ) {

@@ -3,12 +3,15 @@
 
 
 import androidx.annotation.OptIn
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -42,6 +45,11 @@ class MealViewModel : ViewModel() {
 
     private val mealCache = mutableMapOf<String, Meal?>()
     private val categoryMealCache = mutableMapOf<String, List<Meal>>()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoadingMeals: StateFlow<Boolean> get() = _isLoading
+
+
 
 
 
@@ -119,42 +127,52 @@ class MealViewModel : ViewModel() {
     @OptIn(UnstableApi::class)
     fun fetchMeals(query: String = "", category: String = "") {
         viewModelScope.launch {
+            _isLoading.value = true // Start loading
+
             try {
                 // Check cache first
                 val cachedMeals = categoryMealCache[category]
                 if (cachedMeals != null) {
                     _meals.value = cachedMeals
-                    return@launch
-                }
-
-                // Fetch meals from API
-                val meals = if (category.isNotEmpty()) {
-                    val categoryResponse = TheMealService.getInstance().searchMealsByCategory(category)
-                    categoryResponse.meals?.let { mealList ->
-                        // Fetch full meal details concurrently
-                        mealList.map { meal ->
-                            async {
-                                fetchFullMealDetails(meal)
-                            }
-                        }.awaitAll() // Wait for all meal details to be fetched
-                    } ?: emptyList()
                 } else {
-                    val response = TheMealService.getInstance().searchMeals(query)
-                    response.meals ?: emptyList()
-                }
+                    // Fetch meals from API
+                    val meals = if (category.isNotEmpty()) {
+                        val categoryResponse = TheMealService.getInstance().searchMealsByCategory(category)
 
-                // Cache meals after fetching
-                if (category.isNotEmpty()) {
-                    categoryMealCache[category] = meals
-                }
+                        // Use async to fetch full meal details concurrently
+                        val mealsWithDetails = coroutineScope {
+                            categoryResponse.meals?.map { meal ->
+                                async {
+                                    fetchFullMealDetails(meal)
+                                }
+                            }?.awaitAll() ?: emptyList()
+                        }
 
-                _meals.value = meals
+                        mealsWithDetails
+                    } else {
+                        val response = TheMealService.getInstance().searchMeals(query)
+                        response.meals ?: emptyList()
+                    }
+
+                    // Cache meals after fetching
+                    if (category.isNotEmpty()) {
+                        categoryMealCache[category] = meals
+                    }
+
+                    _meals.value = meals
+                }
             } catch (e: Exception) {
                 _error.value = e.message ?: "An unknown error occurred"
                 _meals.value = emptyList()
+            } finally {
+                _isLoading.value = false // Stop loading
             }
         }
     }
+
+
+
+
 
     @OptIn(UnstableApi::class)
     private suspend fun fetchFullMealDetails(meal: Meal): Meal {
