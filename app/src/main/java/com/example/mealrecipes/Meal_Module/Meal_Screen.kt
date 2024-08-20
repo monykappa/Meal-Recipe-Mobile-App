@@ -69,6 +69,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                         Button(
                             onClick = {
                                 selectedCategory.value = category.strCategory
+                                viewModel.clearMeals() // Clear current meals to provide immediate feedback
                                 viewModel.fetchMeals(category = category.strCategory)
                             },
                             modifier = Modifier.padding(horizontal = 4.dp),
@@ -92,6 +93,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(text = category.strCategory)
                         }
+
                     }
                 }
             }
@@ -212,6 +214,7 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
 }
 
 
+
 @Composable
 fun MealItem(
     meal: Meal,
@@ -249,7 +252,7 @@ fun MealItem(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
-                    text = "Area: ${meal.strArea ?: "Not available"}",
+                    text = "Area: ${meal.strArea ?: "Unknown"}",
                     style = MaterialTheme.typography.bodySmall
                 )
             }
