@@ -2,6 +2,7 @@ package com.example.mealrecipes.Meal_Module
 
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -16,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -69,7 +71,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                 },
                 navigationIcon = {},
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF35374B), // Set your custom color here
+                    containerColor = Color(0xFF1E201E), // Set your custom color here
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
@@ -78,7 +80,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFEFAF6))
+                .background(Color(0xFF3C3D37))
         ) {
             LazyColumn(modifier = Modifier.padding(innerPadding)) {
                 // Carousel of meal images and names
@@ -90,10 +92,8 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                                 navController.navigate("MealDetail/${selectedMeal.strMeal}")
                             }
                         )
-
                     }
                     Spacer(modifier = Modifier.height(15.dp))
-
                 }
 
                 // Category Buttons
@@ -109,7 +109,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                                 },
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF35374B),  // Set background color
+                                    containerColor = Color(0xFF1E201E),  // Set background color
                                     contentColor = Color.White           // Set text color to white
                                 )
                             ) {
@@ -123,8 +123,8 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                             }
                         }
                     }
+                    Spacer(modifier = Modifier.height(15.dp)) // Add space below the category buttons
                 }
-
 
                 // Error message
                 error?.let {
@@ -132,7 +132,6 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                         Text("Error: $it", color = MaterialTheme.colorScheme.error)
                     }
                 }
-
 
                 // Meal list
                 items(meals) { meal ->
@@ -176,7 +175,7 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFEFAF6))
+                    .background(Color(0xFF3C3D37))
             ) {
                 HorizontalPager(state = pagerState) { page ->
                     itemContent(meals[page])
@@ -192,7 +191,7 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
 
 @Composable
 fun CustomDotsIndicator(totalDots: Int, selectedIndex: Int) {
-    val selectedColor = Color(0xFF000000) // Dark color for selected dots
+    val selectedColor = Color(0xFF1E201E) // Dark color for selected dots
     val unSelectedColor = Color(0xFFB0B0B0) // Light gray for unselected dots
 
     DotsIndicator(
@@ -247,7 +246,7 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFFFEFAF6))
+                .background(Color(0xFF3C3D37))
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -265,7 +264,7 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()  // Ensures the background fills the entire width
-                        .background(Color(0xFF35374B))  // Semi-transparent dark background (alpha 50%)
+                        .background(Color(0xFF1E201E))  // Semi-transparent dark background (alpha 50%)
                         .padding(8.dp)  // Add some padding around the text
                 ) {
                     Text(
@@ -279,8 +278,6 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
     }
 }
 
-
-
 @Composable
 fun MealItem(
     meal: Meal,
@@ -291,58 +288,74 @@ fun MealItem(
 ) {
     var isFavorite by remember { mutableStateOf(viewModel.isFavorite(meal.idMeal)) }
 
+    // Animate the size of the Card to smoothly transition between sizes
+    val animatedModifier = Modifier
+        .padding(2.dp)
+        .fillMaxWidth()
+        .animateContentSize()
+
     Card(
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxWidth()
+        modifier = animatedModifier
             .clickable { onClick(meal) }
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .background(Color(0xFF3C3D37))
+                .animateContentSize() // Animate content size changes
         ) {
-            if (isLoading) {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(end = 16.dp)
-                )
-            } else {
-                AsyncImage(
-                    model = meal.strMealThumb,
-                    contentDescription = meal.strMeal,
-                    modifier = Modifier
-                        .size(100.dp)
-                        .padding(end = 16.dp)
-                )
-            }
-            Column(
-                modifier = Modifier.weight(1f)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp), // Add padding around Row
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = meal.strMeal,
-                    style = MaterialTheme.typography.titleMedium
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Area: ${meal.strArea ?: "Unknown"}",
-                    style = MaterialTheme.typography.bodySmall
-                )
-            }
-            IconButton(
-                onClick = {
-                    viewModel.toggleFavorite(meal)
-                    isFavorite = !isFavorite
-                    onFavoriteChanged(isFavorite)
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .size(100.dp)
+                            .padding(end = 16.dp)
+                    )
+                } else {
+                    AsyncImage(
+                        model = meal.strMealThumb,
+                        contentDescription = meal.strMeal,
+                        modifier = Modifier
+                            .size(100.dp)
+                            .clip(RoundedCornerShape(8.dp)), // Optional: clip the image to have rounded corners
+                        contentScale = ContentScale.Crop
+                    )
                 }
-            ) {
-                Icon(
-                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
-                    tint = if (isFavorite) Color.Red else Color.Gray
-                )
+                Column(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 16.dp)
+                ) {
+                    Text(
+                        text = meal.strMeal,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color(0xFFECDFCC)
+
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "From: ${meal.strArea ?: "Unknown"}",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFECDFCC)
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        viewModel.toggleFavorite(meal)
+                        isFavorite = !isFavorite
+                        onFavoriteChanged(isFavorite)
+                    }
+                ) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        contentDescription = if (isFavorite) "Remove from favorites" else "Add to favorites",
+                        tint = if (isFavorite) Color.Red else Color.Gray
+                    )
+                }
             }
         }
     }
