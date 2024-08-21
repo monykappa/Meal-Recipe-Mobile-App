@@ -125,7 +125,8 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                                     style = TextStyle(
                                     fontFamily = ThirdFont,
                                     fontSize = 20.sp,
-                                ),)
+                                ),
+                                    )
                             }
                         }
                     }

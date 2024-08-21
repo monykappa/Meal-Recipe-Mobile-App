@@ -17,11 +17,11 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.TextStyle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
-
 @Composable
 fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
     val meals by viewModel.meals.collectAsState()
@@ -33,63 +33,94 @@ fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
-            TextField(
-                value = searchQuery.value,
-                onValueChange = { query ->
-                    searchQuery.value = query
-                    viewModel.searchMeals(query)
-                },
-                label = { Text("Search Meals") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+        // Use a Box to ensure the background color fills the entire screen
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xFF3C3D37)) // Apply the background color
+                .padding(innerPadding)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(8.dp) // Ensure there's padding inside the Column
+            ) {
+                TextField(
+                    value = searchQuery.value,
+                    onValueChange = { query ->
+                        searchQuery.value = query
+                        viewModel.searchMeals(query)
+                    },
+                    label = { Text("Search Meals",
+                        style = TextStyle(
+                            fontFamily = MainFont,
+                            fontSize = 20.sp,
+                            color = Color(0xFFECDFCC)
+                        ))
+                    },
+                    colors = TextFieldDefaults.textFieldColors(
 
-            error?.let { errorMessage ->
-                Text(
-                    text = errorMessage,
-                    color = Color.Red,
-                    modifier = Modifier.padding(bottom = 8.dp)
+                        textColor = Color(0xFFECDFCC),
+                        placeholderColor = Color(0xFFb0b4b7),
+                        backgroundColor = Color(0xFF464941),
+                        focusedIndicatorColor = Color(0xFFECDFCC),
+                        unfocusedIndicatorColor = Color(0xFFb0b4b7)
+                    ),
+
+                    modifier = Modifier.fillMaxWidth()
                 )
-            }
+                Spacer(modifier = Modifier.height(16.dp))
 
-            LazyColumn {
-                if (meals.isEmpty() && searchQuery.value.isNotEmpty()) {
-                    item {
-                        Text(
-                            "No meals found",
-                            fontSize = 18.sp,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        )
-                    }
-                } else {
-                    items(meals) { meal ->
-                        MealItems(
-                            meal = meal,
-                            viewModel = viewModel,
-                            onClick = {
-                                // Navigate to the detail screen with the meal ID
-                                navController.navigate("MealDetail/${meal.strMeal}")
-                            },
-                            onFavoriteChanged = { isFavorite ->
-                                coroutineScope.launch {
-                                    val message = if (isFavorite) {
-                                        "Added to favorites"
-                                    } else {
-                                        "Removed from favorites"
+                error?.let { errorMessage ->
+                    Text(
+                        text = errorMessage,
+                        color = Color.Red,
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                }
+
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize() // Ensure LazyColumn fills the available space
+                ) {
+                    if (meals.isEmpty() && searchQuery.value.isNotEmpty()) {
+                        item {
+                            Text(
+                                "No meals found",
+                                fontSize = 18.sp,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            )
+                        }
+                    } else {
+                        items(meals) { meal ->
+                            MealItems(
+                                meal = meal,
+                                viewModel = viewModel,
+                                onClick = {
+                                    // Navigate to the detail screen with the meal ID
+                                    navController.navigate("MealDetail/${meal.strMeal}")
+                                },
+                                onFavoriteChanged = { isFavorite ->
+                                    coroutineScope.launch {
+                                        val message = if (isFavorite) {
+                                            "Added to favorites"
+                                        } else {
+                                            "Removed from favorites"
+                                        }
+                                        snackbarHostState.showSnackbar(message)
                                     }
-                                    snackbarHostState.showSnackbar(message)
                                 }
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             }
         }
     }
 }
+
+
 
 @Composable
 fun MealItems(
@@ -121,12 +152,19 @@ fun MealItems(
             ) {
                 Text(
                     text = it.strMeal,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                        style = TextStyle(
+                            fontFamily = MainFont,
+                            fontSize = 18.sp,
+                            color = Color(0xFFECDFCC)
+                        ),
+                    )
                 Text(
                     text = it.strCategory,
-                    fontSize = 14.sp
+                    style = TextStyle(
+                        fontFamily = ThirdFont,
+                        fontSize = 14.sp,
+                        color = Color(0xFFb0b4b7)
+                    ),
                 )
             }
             IconButton(
