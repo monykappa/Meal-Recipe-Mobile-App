@@ -29,7 +29,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -119,7 +121,11 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                                     modifier = Modifier.size(40.dp)
                                 )
                                 Spacer(modifier = Modifier.width(8.dp))
-                                Text(text = category.strCategory)
+                                Text(text = category.strCategory,
+                                    style = TextStyle(
+                                    fontFamily = ThirdFont,
+                                    fontSize = 20.sp,
+                                ),)
                             }
                         }
                     }
@@ -269,7 +275,11 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
                 ) {
                     Text(
                         text = meal.strMeal,
-                        style = MaterialTheme.typography.titleMedium.copy(color = Color.White), // Text color black
+                        style = TextStyle(
+                            fontFamily = MainFont,
+                            fontSize = 20.sp,
+                            color = Color(0xFFb0b4b7) // Set text color
+                        ),
                         modifier = Modifier.align(Alignment.Center) // Center the text within the Box
                     )
                 }
@@ -332,14 +342,21 @@ fun MealItem(
                 ) {
                     Text(
                         text = meal.strMeal,
-                        style = MaterialTheme.typography.titleMedium,
+                        style = TextStyle(
+                            fontFamily = MainFont,
+                            fontSize = 24.sp,
+
+                        ),
                         color = Color(0xFFECDFCC)
 
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     Text(
                         text = "From: ${meal.strArea ?: "Unknown"}",
-                        style = MaterialTheme.typography.bodySmall,
+                        style = TextStyle(
+                            fontFamily = ThirdFont,
+                            fontSize = 14.sp,
+                        ),
                         color = Color(0xFFECDFCC)
                     )
                 }

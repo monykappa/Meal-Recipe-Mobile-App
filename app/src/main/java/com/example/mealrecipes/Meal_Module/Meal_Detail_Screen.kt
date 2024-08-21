@@ -30,6 +30,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
@@ -61,14 +63,23 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = mealState.value?.strMeal ?: "Meal Details", color = Color.Black) },
+                title = {
+                    Text(
+                        text = mealState.value?.strMeal ?: "Meal Details",
+                        color = Color(0xFFECDFCC),
+                        style = TextStyle(
+                            fontFamily = ThirdFont,
+                            fontSize = 24.sp
+                        )
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back", tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+                    containerColor = Color(0xFF1E201E) // Set background color of top bar
                 )
             )
         }
@@ -76,14 +87,14 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White)
+                .background(Color(0xFF3C3D37)) // Set background color of the screen
                 .padding(paddingValues)
         ) {
             if (mealState.value == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color.White),
+                        .background(Color(0xFF3C3D37)), // Match background color
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
@@ -94,48 +105,79 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(16.dp)
                         .verticalScroll(scrollState)
+                        .padding(10.dp)
                 ) {
                     mealState.value?.let { selectedMeal ->
                         AsyncImage(
                             model = selectedMeal.strMealThumb,
                             contentDescription = selectedMeal.strMeal,
                             modifier = Modifier
-                                .size(150.dp)
-                                .padding(bottom = 16.dp)
+                                .fillMaxWidth() // Make the image full width
+                                .height(300.dp) // Set a fixed height for the image
+                                .padding(0.dp), // No padding around the image
+                            contentScale = ContentScale.Crop // Crop to fit the container
                         )
+                        Spacer(modifier = Modifier.height(16.dp)) // Adjusted spacing for better layout
+
                         Text(
                             text = selectedMeal.strMeal,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold
+                            style = TextStyle(
+                                fontFamily = ThirdFont,
+                                fontSize = 42.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFECDFCC), // Set text color
+                                textAlign = TextAlign.Center // Center the text
+                            ),
+                            modifier = Modifier.fillMaxWidth() // Ensure text takes full width for centering
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Area: ${selectedMeal.strArea}",
-                            fontSize = 16.sp
+                            style = TextStyle(
+                                fontFamily = FourthFont, // Use SecondaryFont for this text
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFECDFCC) // Set text color
+                            )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Category: ${selectedMeal.strCategory}",
-                            fontSize = 16.sp
+                            style = TextStyle(
+                                fontFamily = FourthFont,
+                                fontSize = 16.sp,
+                                color = Color(0xFFECDFCC) // Set text color
+                            )
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Instructions:",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            style = TextStyle(
+                                fontFamily = MainFont,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFECDFCC) // Set text color
+                            )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = selectedMeal.strInstructions ?: "Instructions not available",
-                            fontSize = 16.sp
+                            style = TextStyle(
+                                fontFamily = FourthFont,
+                                fontSize = 16.sp,
+                                color = Color(0xFFb0b4b7) // Set text color
+                            )
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Text(
                             text = "Ingredients:",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold
+                            style = TextStyle(
+                                fontFamily = MainFont,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color(0xFFECDFCC) // Set text color
+                            )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         listOf(
@@ -162,21 +204,33 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                         ).filter { it.first.isNotEmpty() }.forEach { (ingredient, measure) ->
                             Text(
                                 text = "$ingredient: $measure",
-                                fontSize = 16.sp
+                                style = TextStyle(
+                                    fontFamily = FourthFont,
+                                    fontSize = 16.sp,
+                                    color = Color(0xFFb0b4b7) // Set text color
+                                )
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         selectedMeal.strSource?.let {
                             Text(
                                 text = "Source: $it",
-                                fontSize = 16.sp
+                                style = TextStyle(
+                                    fontFamily = FourthFont,
+                                    fontSize = 16.sp,
+                                    color = Color(0xFFb0b4b7) // Set text color
+                                )
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
                         selectedMeal.strYoutube?.let {
                             Text(
                                 text = "YouTube: $it",
-                                fontSize = 16.sp
+                                style = TextStyle(
+                                    fontFamily = FourthFont,
+                                    fontSize = 16.sp,
+                                    color = Color(0xFFb0b4b7) // Set text color
+                                )
                             )
                         }
                     }
