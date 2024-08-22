@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.MaterialTheme
@@ -40,7 +41,7 @@ fun MyApp() {
             composable("Home") { MealScreen(navController, viewModel) }
             composable("Search") { SearchScreen(navController, viewModel) }
             composable("Favorite") { FavoriteScreen(viewModel, navController) }
-            // composable("Settings") { SettingsScreen() }
+            composable("AboutUs") { AboutUsScreen() }
             composable("MealDetail/{mealName}") { backStackEntry ->
                 val mealName = backStackEntry.arguments?.getString("mealName") ?: return@composable
                 MealDetailScreen(mealName = mealName, navController, viewModel)
@@ -49,11 +50,8 @@ fun MyApp() {
     }
 }
 
-
-
 @Composable
 fun BottomNavBar(navController: NavHostController) {
-    // Define your custom text style
     val customTextStyle = TextStyle(
         fontFamily = MainFont,
         fontSize = 16.sp
@@ -63,7 +61,7 @@ fun BottomNavBar(navController: NavHostController) {
         backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
     ) {
-        val items = listOf("Home", "Search", "Favorite", "Settings")
+        val items = listOf("Home", "Search", "Favorite", "AboutUs")
 
         items.forEach { screen ->
             BottomNavigationItem(
@@ -76,10 +74,10 @@ fun BottomNavBar(navController: NavHostController) {
                 label = {
                     Text(
                         text = screen,
-                        style = customTextStyle // Apply the custom text style here
+                        style = customTextStyle
                     )
                 },
-                selected = false, // handle selection state if needed
+                selected = false, // Handle selection state if needed
                 onClick = {
                     navController.navigate(screen)
                 }
@@ -89,15 +87,14 @@ fun BottomNavBar(navController: NavHostController) {
 }
 
 
+
 @Composable
 fun getIcon(screen: String): ImageVector {
     return when (screen) {
         "Home" -> Icons.Filled.Home
         "Search" -> Icons.Filled.Search
         "Favorite" -> Icons.Filled.Favorite
-        "Settings" -> Icons.Filled.Settings
+        "AboutUs" -> Icons.Filled.Info // You can use a different icon here
         else -> Icons.Filled.Home
     }
 }
-
-
