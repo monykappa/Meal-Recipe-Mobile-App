@@ -15,6 +15,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -49,9 +51,14 @@ fun MyApp() {
 
 
 
-
 @Composable
 fun BottomNavBar(navController: NavHostController) {
+    // Define your custom text style
+    val customTextStyle = TextStyle(
+        fontFamily = MainFont,
+        fontSize = 16.sp
+    )
+
     BottomNavigation(
         backgroundColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground
@@ -66,7 +73,12 @@ fun BottomNavBar(navController: NavHostController) {
                         contentDescription = null
                     )
                 },
-                label = { Text(screen) },
+                label = {
+                    Text(
+                        text = screen,
+                        style = customTextStyle // Apply the custom text style here
+                    )
+                },
                 selected = false, // handle selection state if needed
                 onClick = {
                     navController.navigate(screen)

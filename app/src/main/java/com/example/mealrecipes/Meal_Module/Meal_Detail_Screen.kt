@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -35,6 +36,43 @@ import androidx.compose.ui.text.TextStyle
 import androidx.media3.common.util.Log
 import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavController
+import android.content.Intent
+import android.net.Uri
+import android.webkit.WebChromeClient
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.BasicText
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+
+import androidx.compose.ui.text.AnnotatedString
+
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+import androidx.compose.ui.text.style.TextOverflow
+
+import androidx.compose.foundation.layout.*
+
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
+import coil.compose.AsyncImage
+import coil.compose.rememberImagePainter
+
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+
+import androidx.navigation.compose.rememberNavController
 
 
 
@@ -43,6 +81,7 @@ import androidx.navigation.NavController
 fun MealDetailScreen(mealName: String, navController: NavController, viewModel: MealViewModel = viewModel()) {
     val mealState = remember { mutableStateOf<Meal?>(null) }
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
 
     LaunchedEffect(mealName) {
         mealState.value = viewModel.getCachedMealByName(mealName)
@@ -135,7 +174,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                         Text(
                             text = "Area: ${selectedMeal.strArea}",
                             style = TextStyle(
-                                fontFamily = FourthFont, // Use SecondaryFont for this text
+                                fontFamily = FourthFont, // Use FourthFont for this text
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color(0xFFECDFCC) // Set text color
@@ -212,6 +251,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
+
                         selectedMeal.strSource?.let {
                             Text(
                                 text = "Source: $it",
@@ -223,19 +263,66 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                         }
-                        selectedMeal.strYoutube?.let {
-                            Text(
-                                text = "YouTube: $it",
-                                style = TextStyle(
-                                    fontFamily = FourthFont,
-                                    fontSize = 16.sp,
-                                    color = Color(0xFFb0b4b7) // Set text color
-                                )
-                            )
+
+                        // YouTube Video Preview
+                        selectedMeal.strYoutube?.let { youtube ->
+                            if (youtube.isNotEmpty()) { // Check if YouTube URL is not empty
+                                val videoId = Uri.parse(youtube).getQueryParameter("v")
+                                if (videoId != null) {
+                                    AndroidView(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(200.dp), // Adjust height as needed
+                                        factory = { context ->
+                                            WebView(context).apply {
+                                                webViewClient = WebViewClient()
+                                                webChromeClient = WebChromeClient()
+                                                settings.javaScriptEnabled = true
+                                                settings.domStorageEnabled = true
+                                                loadUrl(youtube) // Load the full YouTube URL
+                                            }
+                                        }
+                                    )
+                                } else {
+                                    Text("Invalid YouTube URL")
+                                }
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+fun IngredientItem(ingredient: String, measure: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "$ingredient: $measure",
+            style = TextStyle(
+                fontFamily = FourthFont,
+                fontSize = 16.sp,
+                color = Color(0xFFb0b4b7) // Set text color
+            ),
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier.width(8.dp)) // Adjust space before the dot
+        DotDivider() // Add the dot divider
+    }
+}
+
+@Composable
+fun DotDivider() {
+    Box(
+        modifier = Modifier
+            .size(4.dp)
+            .background(Color(0xFFb0b4b7), shape = CircleShape)
+    )
 }

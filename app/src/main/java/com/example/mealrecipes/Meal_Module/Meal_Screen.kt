@@ -52,7 +52,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
     val areaMeals by viewModel.areaMeals.collectAsState(emptyList())
 
     LaunchedEffect(Unit) {
-        viewModel.fetchMealsByArea("American")
+        viewModel.fetchMealsByArea("French")
     }
 
     Scaffold(
