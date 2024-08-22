@@ -247,24 +247,46 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                     fontFamily = FourthFont,
                                     fontSize = 16.sp,
                                     color = Color(0xFFb0b4b7) // Set text color
-                                )
+                                ),
+                                modifier = Modifier.padding(vertical = 4.dp) // Add vertical padding to separate items
+                            )
+                            Divider(
+                                color = Color(0xFFb0b4b7),
+                                modifier = Modifier.padding(vertical = 8.dp)
                             )
                         }
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        selectedMeal.strSource?.let {
-                            Text(
-                                text = "Source: $it",
-                                style = TextStyle(
-                                    fontFamily = FourthFont,
-                                    fontSize = 16.sp,
-                                    color = Color(0xFFb0b4b7) // Set text color
+                        selectedMeal.strSource?.let { source ->
+                            if (source.isNotEmpty()) { // Check if source is not empty
+                                Text(
+                                    text = "Sources:",
+                                    style = TextStyle(
+                                        fontFamily = MainFont,
+                                        fontSize = 28.sp,
+                                        color = Color(0xFFECDFCC) // Set text color
+                                    )
                                 )
-                            )
-                            Spacer(modifier = Modifier.height(8.dp))
-                        }
 
-                        // YouTube Video Preview
+                                ClickableText(
+
+                                    text = AnnotatedString("$source"),
+                                    style = TextStyle(
+                                        fontFamily = FourthFont,
+                                        fontSize = 16.sp,
+                                        color = Color(0xFFb0b4b7)
+                                    ),
+                                    onClick = {
+                                        try {
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(source))
+                                            context.startActivity(intent)
+                                        } catch (e: Exception) {
+                                            Log.e("MealDetailScreen", "Error opening URL: $source", e)
+                                        }
+                                    }
+                                )
+                                Spacer(modifier = Modifier.height(8.dp))
+                            }
+                        }
                         selectedMeal.strYoutube?.let { youtube ->
                             if (youtube.isNotEmpty()) { // Check if YouTube URL is not empty
                                 val videoId = Uri.parse(youtube).getQueryParameter("v")
@@ -272,7 +294,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                     AndroidView(
                                         modifier = Modifier
                                             .fillMaxWidth()
-                                            .height(200.dp), // Adjust height as needed
+                                            .height(300.dp), // Adjust height as needed
                                         factory = { context ->
                                             WebView(context).apply {
                                                 webViewClient = WebViewClient()
@@ -295,6 +317,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
         }
     }
 }
+
 
 @Composable
 fun IngredientItem(ingredient: String, measure: String) {
