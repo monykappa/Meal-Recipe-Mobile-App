@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutUsScreen() {
-    // Define your SnackbarHostState if needed
     val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
@@ -63,14 +62,14 @@ fun AboutUsScreen() {
                         contentAlignment = Alignment.Center
                     ) {
                         Image(
-                            painter = painterResource(id = R.drawable.logo), // Replace with your logo resource
+                            painter = painterResource(id = R.drawable.logo),
                             contentDescription = "Brand Logo",
                             modifier = Modifier.size(130.dp)
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1E201E), // Set your custom color here
+                    containerColor = Color(0xFF1E201E),
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
@@ -80,17 +79,17 @@ fun AboutUsScreen() {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .background(Color(0xFF3C3D37)), // Background color
-            verticalArrangement = Arrangement.Top, // Adjust to place content at the top
+                .background(Color(0xFF3C3D37)),
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Add the image below the TopAppBar
+
             Image(
                 painter = rememberImagePainter("https://t3.ftcdn.net/jpg/03/12/05/84/360_F_312058427_XcbdLYQcFpGhBPnBlFSGv5c6JQ3mEuQc.jpg"),
                 contentDescription = "About Us Image",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(255.dp) // Adjust height as needed
+                    .height(255.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text(
@@ -100,17 +99,17 @@ fun AboutUsScreen() {
                     fontSize = 32.sp,
                     color = Color(0xFFECDFCC)
                 ),
-                modifier = Modifier.padding(horizontal = 16.dp) // Padding for the "About Us" title
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .verticalScroll(rememberScrollState()) // Enable vertical scrolling
-                    .padding(horizontal = 16.dp) // Padding for the text content
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "Welcome to our mobile meal recipes application! We are thrilled to offer you a comprehensive platform where you can explore a diverse range of meal recipes from various cuisines around the world. Our application is designed to cater to both novice and experienced cooks, providing an easy and intuitive way to discover, save, and share your favorite recipes. Whether you're looking to try a new dish, perfect a classic recipe, or find inspiration for your next meal, our app is here to help.\n\nOur app features a user-friendly interface that allows you to browse through an extensive collection of recipes, categorized by meal type, ingredient, cuisine, and more. You can search for recipes based on specific criteria or simply explore our curated lists. Each recipe includes detailed instructions, ingredient lists, and nutritional information to ensure you have everything you need to cook with confidence.\n\nIn addition to browsing and searching, you can save your favorite recipes to a personal collection for easy access later. Our app also allows you to create and manage your meal plans, helping you organize your cooking schedule and make the most out of your ingredients. Sharing recipes with friends and family is a breeze, as you can easily send your favorite dishes via social media or email.\n\nWe understand that cooking is not just about following recipes; it's about creating memorable experiences and enjoying the process. That's why we strive to offer features that make cooking fun and rewarding. From instructional videos and cooking tips to interactive features that let you customize recipes, our app aims to enhance your culinary journey.\n\nOur team is committed to continuously improving and expanding the app, adding new features, and incorporating user feedback. We value your input and encourage you to reach out with any suggestions or questions. Your satisfaction is our priority, and we are dedicated to providing you with the best possible experience.\n\nThank you for choosing our meal recipes application. We hope it becomes an invaluable tool in your kitchen, helping you create delicious meals and explore the world of cooking in new and exciting ways.",
+                    text = "Welcome to our mobile meal recipes application! We are thrilled to offer you a comprehensive platform where you can explore a diverse range of meal recipes from various cuisines around the world. Our application is designed to cater to both novice and experienced cooks, providing an easy and intuitive way to discover, save, and share your favorite recipes. Whether you're looking to try a new dish, perfect a classic recipe, or find inspiration for your next meal, our app is here to help.\n\nOur app features a user-friendly interface that allows you to browse through an extensive collection of recipes, categorized by meal type, ingredient, cuisine, and more. Each recipe includes detailed instructions, ingredient lists, and nutritional information to ensure you have everything you need to cook with confidence.\n\nIn addition to browsing and searching, you can save your favorite recipes to a personal collection for easy access later. Sharing recipes with friends and family is a breeze, as you can easily send your favorite dishes via social media or email.\n\nWe understand that cooking is not just about following recipes; it's about creating memorable experiences and enjoying the process. That's why we strive to offer features that make cooking fun and rewarding. From instructional videos and cooking tips to interactive features that let you customize recipes, our app aims to enhance your culinary journey.\n\nOur team is committed to continuously improving and expanding the app, adding new features, and incorporating user feedback. We value your input and encourage you to reach out with any suggestions or questions. Your satisfaction is our priority, and we are dedicated to providing you with the best possible experience.\n\nThank you for choosing our meal recipes application. We hope it becomes an invaluable tool in your kitchen, helping you create delicious meals and explore the world of cooking in new and exciting ways.",
                     style = TextStyle(
                         fontFamily = FourthFont,
                         fontSize = 14.sp,

@@ -26,9 +26,8 @@ import coil.compose.AsyncImage
 fun FavoriteScreen(viewModel: MealViewModel = viewModel(), navController: NavHostController) {
     val favoriteMeals by viewModel.favoriteMeals.collectAsState()
 
-    // Background color
+
     val backgroundColor = Color(0xFF3C3D37)
-    // Top bar text background color
     val topBarTextBackgroundColor = Color(0xFF1E201E)
 
     Box(
@@ -42,9 +41,9 @@ fun FavoriteScreen(viewModel: MealViewModel = viewModel(), navController: NavHos
                     .background(topBarTextBackgroundColor)
                     .fillMaxWidth()
                     .padding(8.dp)
-                    .wrapContentHeight() // Ensures the Box wraps its content height
+                    .wrapContentHeight()
             ) {
-                // Center the text horizontally within the Box
+
                 Text(
                     text = "Favorite Meals",
                     style = TextStyle(
@@ -53,8 +52,8 @@ fun FavoriteScreen(viewModel: MealViewModel = viewModel(), navController: NavHos
                         color = Color.White
                     ),
                     modifier = Modifier
-                        .align(Alignment.Center) // Align the Text in the center of the Box
-                        .padding(vertical = 8.dp) // Adjust vertical padding if needed
+                        .align(Alignment.Center)
+                        .padding(vertical = 8.dp)
                 )
             }
 

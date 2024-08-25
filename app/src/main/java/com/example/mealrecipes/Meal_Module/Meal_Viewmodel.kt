@@ -25,7 +25,6 @@ import retrofit2.HttpException
 import java.io.IOException
 
 
-
 class MealViewModel : ViewModel() {
     private val _meals = MutableStateFlow<List<Meal>>(emptyList())
     val meals: StateFlow<List<Meal>> = _meals
@@ -49,10 +48,6 @@ class MealViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoadingMeals: StateFlow<Boolean> get() = _isLoading
 
-
-
-
-
     fun fetchMealsByArea(area: String) {
         viewModelScope.launch {
             try {
@@ -65,33 +60,29 @@ class MealViewModel : ViewModel() {
         }
     }
 
-    // Function to get a cached meal by name
     fun getCachedMealByName(mealName: String): Meal? {
         return mealCache[mealName]
     }
 
-
-    // Function to fetch a meal by its name and update the cache
     @OptIn(UnstableApi::class) suspend fun fetchMealByName(mealName: String): Meal? {
         return try {
             val response = TheMealService.getInstance().searchMeals(mealName)
             val meal = response.meals?.firstOrNull { it.strMeal == mealName }
-            mealCache[mealName] = meal // Cache the meal by name
+            mealCache[mealName] = meal
             meal
         } catch (e: Exception) {
-            androidx.media3.common.util.Log.e("MealViewModel", "Error fetching meal by name: ${e.message}")
             null
         }
     }
 
     init {
-        fetchMeals() // Initial fetch
-        fetchCategories() // Fetch categories initially
+        fetchMeals()
+        fetchCategories()
     }
 
     @OptIn(UnstableApi::class)
     fun toggleFavorite(meal: Meal) {
-        val area = meal.strArea ?: "Unknown" // Default value if null
+        val area = meal.strArea ?: "Unknown"
         val favorite = FavoriteMeal(meal.idMeal, meal.strMeal, meal.strMealThumb, area)
         val currentFavorites = _favoriteMeals.value.toMutableList()
         Log.d("MealViewModel", "Toggling favorite for meal: ${meal.strMeal}")
@@ -109,7 +100,6 @@ class MealViewModel : ViewModel() {
         _meals.value = emptyList()
     }
 
-
     fun removeFavorite(mealId: String) {
         val currentFavorites = _favoriteMeals.value.toMutableList()
         currentFavorites.removeAll { it.id == mealId }
@@ -121,25 +111,19 @@ class MealViewModel : ViewModel() {
     }
 
 
-
-
-
     @OptIn(UnstableApi::class)
     fun fetchMeals(query: String = "", category: String = "") {
         viewModelScope.launch {
-            _isLoading.value = true // Start loading
+            _isLoading.value = true
 
             try {
-                // Check cache first
+
                 val cachedMeals = categoryMealCache[category]
                 if (cachedMeals != null) {
                     _meals.value = cachedMeals
                 } else {
-                    // Fetch meals from API
                     val meals = if (category.isNotEmpty()) {
                         val categoryResponse = TheMealService.getInstance().searchMealsByCategory(category)
-
-                        // Use async to fetch full meal details concurrently
                         val mealsWithDetails = coroutineScope {
                             categoryResponse.meals?.map { meal ->
                                 async {
@@ -147,55 +131,41 @@ class MealViewModel : ViewModel() {
                                 }
                             }?.awaitAll() ?: emptyList()
                         }
-
                         mealsWithDetails
                     } else {
                         val response = TheMealService.getInstance().searchMeals(query)
                         response.meals ?: emptyList()
                     }
-
-                    // Cache meals after fetching
                     if (category.isNotEmpty()) {
                         categoryMealCache[category] = meals
                     }
-
                     _meals.value = meals
                 }
             } catch (e: Exception) {
                 _error.value = e.message ?: "An unknown error occurred"
                 _meals.value = emptyList()
             } finally {
-                _isLoading.value = false // Stop loading
+                _isLoading.value = false
             }
         }
     }
 
-
-
-
-
     @OptIn(UnstableApi::class)
     private suspend fun fetchFullMealDetails(meal: Meal): Meal {
         return try {
-            // Attempt to fetch the full details of the meal
+
             val fullMealResponse = TheMealService.getInstance().searchMeals(meal.strMeal)
-            // Find the correct meal details in the response
+
             val fullMeal = fullMealResponse.meals?.firstOrNull { it.idMeal == meal.idMeal }
-            // Return the full meal details if found, otherwise return the original meal
+
             fullMeal ?: meal
         } catch (e: Exception) {
-            // Log the error and return the original meal with its existing details
+
             Log.e("MealViewModel", "Error fetching full meal details: ${e.message}")
             meal
         }
     }
 
-
-
-
-
-
-    // Function to search for meals based on a query
     fun searchMeals(query: String) {
         viewModelScope.launch {
             try {
@@ -205,7 +175,7 @@ class MealViewModel : ViewModel() {
                 } else {
                     _meals.value = emptyList()
                 }
-                _error.value = null // Clear any previous errors
+                _error.value = null
             } catch (e: Exception) {
                 _error.value = e.message ?: "An unknown error occurred"
                 _meals.value = emptyList()
@@ -214,7 +184,6 @@ class MealViewModel : ViewModel() {
     }
 
 
-    // Function to fetch meal categories
     private fun fetchCategories() {
         viewModelScope.launch {
             try {

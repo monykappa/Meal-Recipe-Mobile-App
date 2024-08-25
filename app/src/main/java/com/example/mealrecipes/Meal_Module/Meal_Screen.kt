@@ -73,7 +73,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                 },
                 navigationIcon = {},
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1E201E), // Set your custom color here
+                    containerColor = Color(0xFF1E201E),
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
@@ -106,13 +106,13 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                             Button(
                                 onClick = {
                                     selectedCategory.value = category.strCategory
-                                    viewModel.clearMeals() // Clear current meals to provide immediate feedback
+                                    viewModel.clearMeals()
                                     viewModel.fetchMeals(category = category.strCategory)
                                 },
                                 modifier = Modifier.padding(horizontal = 4.dp),
                                 colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color(0xFF1E201E),  // Set background color
-                                    contentColor = Color.White           // Set text color to white
+                                    containerColor = Color(0xFF1E201E),
+                                    contentColor = Color.White
                                 )
                             ) {
                                 AsyncImage(
@@ -130,7 +130,7 @@ fun MealScreen(navController: NavHostController, viewModel: MealViewModel = view
                             }
                         }
                     }
-                    Spacer(modifier = Modifier.height(15.dp)) // Add space below the category buttons
+                    Spacer(modifier = Modifier.height(15.dp))
                 }
 
                 // Error message
@@ -198,8 +198,8 @@ fun Carousel(meals: List<Meal>, itemContent: @Composable (Meal) -> Unit) {
 
 @Composable
 fun CustomDotsIndicator(totalDots: Int, selectedIndex: Int) {
-    val selectedColor = Color(0xFF1E201E) // Dark color for selected dots
-    val unSelectedColor = Color(0xFFB0B0B0) // Light gray for unselected dots
+    val selectedColor = Color(0xFF1E201E)
+    val unSelectedColor = Color(0xFFB0B0B0)
 
     DotsIndicator(
         totalDots = totalDots,
@@ -221,25 +221,22 @@ fun DotsIndicator(
         modifier = Modifier
             .wrapContentWidth()
             .wrapContentHeight()
-            .padding(8.dp) // Add padding if needed
+            .padding(8.dp)
     ) {
         items(totalDots) { index ->
             Box(
                 modifier = Modifier
-                    .size(8.dp) // Size of the dots
+                    .size(8.dp)
                     .clip(CircleShape)
                     .background(if (index == selectedIndex) selectedColor else unSelectedColor)
             )
 
             if (index != totalDots - 1) {
-                Spacer(modifier = Modifier.width(4.dp)) // Adjust spacing between dots
+                Spacer(modifier = Modifier.width(4.dp))
             }
         }
     }
 }
-
-
-
 
 
 @Composable
@@ -257,7 +254,7 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth().padding(16.dp)  // Ensures the content is centered and padded
+                modifier = Modifier.fillMaxWidth().padding(16.dp)
             ) {
                 AsyncImage(
                     model = meal.strMealThumb,
@@ -265,23 +262,23 @@ fun MealCarouselItem(meal: Meal, onClick: (Meal) -> Unit) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .aspectRatio(16 / 20f)  // Adjust aspect ratio as needed
+                        .aspectRatio(16 / 20f)
                 )
 
                 Box(
                     modifier = Modifier
-                        .fillMaxWidth()  // Ensures the background fills the entire width
-                        .background(Color(0xFF1E201E))  // Semi-transparent dark background (alpha 50%)
-                        .padding(8.dp)  // Add some padding around the text
+                        .fillMaxWidth()
+                        .background(Color(0xFF1E201E))
+                        .padding(8.dp)
                 ) {
                     Text(
                         text = meal.strMeal,
                         style = TextStyle(
                             fontFamily = MainFont,
                             fontSize = 20.sp,
-                            color = Color(0xFFb0b4b7) // Set text color
+                            color = Color(0xFFb0b4b7)
                         ),
-                        modifier = Modifier.align(Alignment.Center) // Center the text within the Box
+                        modifier = Modifier.align(Alignment.Center)
                     )
                 }
             }
@@ -299,7 +296,6 @@ fun MealItem(
 ) {
     var isFavorite by remember { mutableStateOf(viewModel.isFavorite(meal.idMeal)) }
 
-    // Animate the size of the Card to smoothly transition between sizes
     val animatedModifier = Modifier
         .padding(2.dp)
         .fillMaxWidth()
@@ -312,12 +308,12 @@ fun MealItem(
         Box(
             modifier = Modifier
                 .background(Color(0xFF3C3D37))
-                .animateContentSize() // Animate content size changes
+                .animateContentSize()
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp), // Add padding around Row
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 if (isLoading) {
@@ -332,7 +328,7 @@ fun MealItem(
                         contentDescription = meal.strMeal,
                         modifier = Modifier
                             .size(100.dp)
-                            .clip(RoundedCornerShape(8.dp)), // Optional: clip the image to have rounded corners
+                            .clip(RoundedCornerShape(8.dp)),
                         contentScale = ContentScale.Crop
                     )
                 }

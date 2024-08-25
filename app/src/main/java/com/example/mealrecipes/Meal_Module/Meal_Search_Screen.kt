@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.launch
+
 @Composable
 fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
     val meals by viewModel.meals.collectAsState()
@@ -33,17 +34,16 @@ fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { innerPadding ->
-        // Use a Box to ensure the background color fills the entire screen
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF3C3D37)) // Apply the background color
+                .background(Color(0xFF3C3D37))
                 .padding(innerPadding)
         ) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(8.dp) // Ensure there's padding inside the Column
+                    .padding(8.dp)
             ) {
                 TextField(
                     value = searchQuery.value,
@@ -80,7 +80,7 @@ fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
                 }
 
                 LazyColumn(
-                    modifier = Modifier.fillMaxSize() // Ensure LazyColumn fills the available space
+                    modifier = Modifier.fillMaxSize()
                 ) {
                     if (meals.isEmpty() && searchQuery.value.isNotEmpty()) {
                         item {
@@ -98,7 +98,6 @@ fun SearchScreen(navController: NavController, viewModel: MealViewModel) {
                                 meal = meal,
                                 viewModel = viewModel,
                                 onClick = {
-                                    // Navigate to the detail screen with the meal ID
                                     navController.navigate("MealDetail/${meal.strMeal}")
                                 },
                                 onFavoriteChanged = { isFavorite ->

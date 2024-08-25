@@ -64,6 +64,7 @@ import androidx.compose.foundation.layout.*
 
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.viewinterop.AndroidView
 import coil.compose.AsyncImage
 import coil.compose.rememberImagePainter
@@ -98,7 +99,6 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
             Log.d("MealDetailScreen", "Meal found in cache: ${mealState.value?.strMeal}")
         }
     }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -118,7 +118,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF1E201E) // Set background color of top bar
+                    containerColor = Color(0xFF1E201E)
                 )
             )
         }
@@ -126,14 +126,14 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFF3C3D37)) // Set background color of the screen
+                .background(Color(0xFF3C3D37))
                 .padding(paddingValues)
         ) {
             if (mealState.value == null) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(Color(0xFF3C3D37)), // Match background color
+                        .background(Color(0xFF3C3D37)),
                     contentAlignment = Alignment.Center
                 ) {
                     CircularProgressIndicator(
@@ -152,12 +152,12 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             model = selectedMeal.strMealThumb,
                             contentDescription = selectedMeal.strMeal,
                             modifier = Modifier
-                                .fillMaxWidth() // Make the image full width
-                                .height(300.dp) // Set a fixed height for the image
-                                .padding(0.dp), // No padding around the image
-                            contentScale = ContentScale.Crop // Crop to fit the container
+                                .fillMaxWidth()
+                                .height(300.dp)
+                                .padding(0.dp),
+                            contentScale = ContentScale.Crop
                         )
-                        Spacer(modifier = Modifier.height(16.dp)) // Adjusted spacing for better layout
+                        Spacer(modifier = Modifier.height(16.dp))
 
                         Text(
                             text = selectedMeal.strMeal,
@@ -165,19 +165,19 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                 fontFamily = ThirdFont,
                                 fontSize = 42.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFECDFCC), // Set text color
-                                textAlign = TextAlign.Center // Center the text
+                                color = Color(0xFFECDFCC),
+                                textAlign = TextAlign.Center
                             ),
-                            modifier = Modifier.fillMaxWidth() // Ensure text takes full width for centering
+                            modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(
                             text = "Area: ${selectedMeal.strArea}",
                             style = TextStyle(
-                                fontFamily = FourthFont, // Use FourthFont for this text
+                                fontFamily = FourthFont,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFECDFCC) // Set text color
+                                color = Color(0xFFECDFCC)
                             )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -186,7 +186,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             style = TextStyle(
                                 fontFamily = FourthFont,
                                 fontSize = 16.sp,
-                                color = Color(0xFFECDFCC) // Set text color
+                                color = Color(0xFFECDFCC)
                             )
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -196,7 +196,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                 fontFamily = MainFont,
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFECDFCC) // Set text color
+                                color = Color(0xFFECDFCC)
                             )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -205,7 +205,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             style = TextStyle(
                                 fontFamily = FourthFont,
                                 fontSize = 16.sp,
-                                color = Color(0xFFb0b4b7) // Set text color
+                                color = Color(0xFFb0b4b7)
                             )
                         )
                         Spacer(modifier = Modifier.height(16.dp))
@@ -215,7 +215,7 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                 fontFamily = MainFont,
                                 fontSize = 28.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFFECDFCC) // Set text color
+                                color = Color(0xFFECDFCC)
                             )
                         )
                         Spacer(modifier = Modifier.height(8.dp))
@@ -246,9 +246,9 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                                 style = TextStyle(
                                     fontFamily = FourthFont,
                                     fontSize = 16.sp,
-                                    color = Color(0xFFb0b4b7) // Set text color
+                                    color = Color(0xFFb0b4b7)
                                 ),
-                                modifier = Modifier.padding(vertical = 4.dp) // Add vertical padding to separate items
+                                modifier = Modifier.padding(vertical = 4.dp)
                             )
                             Divider(
                                 color = Color(0xFFb0b4b7),
@@ -257,13 +257,13 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                         }
                         Spacer(modifier = Modifier.height(16.dp))
                         selectedMeal.strSource?.let { source ->
-                            if (source.isNotEmpty()) { // Check if source is not empty
+                            if (source.isNotEmpty()) {
                                 Text(
                                     text = "Sources:",
                                     style = TextStyle(
                                         fontFamily = MainFont,
                                         fontSize = 28.sp,
-                                        color = Color(0xFFECDFCC) // Set text color
+                                        color = Color(0xFFECDFCC)
                                     )
                                 )
 
@@ -288,29 +288,25 @@ fun MealDetailScreen(mealName: String, navController: NavController, viewModel: 
                             }
                         }
                         selectedMeal.strYoutube?.let { youtube ->
-                            if (youtube.isNotEmpty()) { // Check if YouTube URL is not empty
-                                val videoId = Uri.parse(youtube).getQueryParameter("v")
-                                if (videoId != null) {
-                                    AndroidView(
-                                        modifier = Modifier
-                                            .fillMaxWidth()
-                                            .height(300.dp), // Adjust height as needed
-                                        factory = { context ->
-                                            WebView(context).apply {
-                                                webViewClient = WebViewClient()
-                                                webChromeClient = WebChromeClient()
-                                                settings.javaScriptEnabled = true
-                                                settings.domStorageEnabled = true
-                                                loadUrl(youtube) // Load the full YouTube URL
-                                            }
+                            if (youtube.isNotEmpty()) {
+                                Text(
+                                    text = "Watch on YouTube",
+                                    style = TextStyle(
+                                        fontFamily = FourthFont,
+                                        fontSize = 16.sp,
+                                        color = Color(0xFFb0b4b7),
+                                        textDecoration = TextDecoration.Underline
+                                    ),
+                                    modifier = Modifier
+                                        .clickable {
+                                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(youtube))
+                                            context.startActivity(intent)
                                         }
-                                    )
-                                } else {
-                                    Text("Invalid YouTube URL")
-                                }
-                                Spacer(modifier = Modifier.height(8.dp))
+                                        .padding(vertical = 8.dp)
+                                )
                             }
                         }
+
                     }
                 }
             }
@@ -332,12 +328,12 @@ fun IngredientItem(ingredient: String, measure: String) {
             style = TextStyle(
                 fontFamily = FourthFont,
                 fontSize = 16.sp,
-                color = Color(0xFFb0b4b7) // Set text color
+                color = Color(0xFFb0b4b7)
             ),
             modifier = Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.width(8.dp)) // Adjust space before the dot
-        DotDivider() // Add the dot divider
+        Spacer(modifier = Modifier.width(8.dp))
+        DotDivider()
     }
 }
 

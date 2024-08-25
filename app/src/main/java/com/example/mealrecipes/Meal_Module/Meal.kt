@@ -18,7 +18,7 @@ data class MealsResponse(
 
 
 
-// Define the data model for a single category
+
 data class Category(
     val idCategory: String,
     val strCategory: String,
@@ -26,7 +26,7 @@ data class Category(
     val strCategoryDescription: String
 )
 
-// Define the data model for the response containing a list of categories
+
 data class CategoriesResponse(
     val categories: List<Category>
 )

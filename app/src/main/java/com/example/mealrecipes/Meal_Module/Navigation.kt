@@ -77,7 +77,7 @@ fun BottomNavBar(navController: NavHostController) {
                         style = customTextStyle
                     )
                 },
-                selected = false, // Handle selection state if needed
+                selected = false,
                 onClick = {
                     navController.navigate(screen)
                 }
@@ -94,7 +94,7 @@ fun getIcon(screen: String): ImageVector {
         "Home" -> Icons.Filled.Home
         "Search" -> Icons.Filled.Search
         "Favorite" -> Icons.Filled.Favorite
-        "AboutUs" -> Icons.Filled.Info // You can use a different icon here
+        "AboutUs" -> Icons.Filled.Info
         else -> Icons.Filled.Home
     }
 }

@@ -25,7 +25,6 @@ interface TheMealService {
     suspend fun searchMealsByArea(@Query("a") area: String): MealsResponse
 
 
-
     companion object {
         private var apiService: TheMealService? = null
         fun getInstance(): TheMealService {
